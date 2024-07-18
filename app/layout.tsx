@@ -1,3 +1,13 @@
+import { Header } from "../components/Header";
+import { Hanken_Grotesk } from "next/font/google";
+
+const inter = Hanken_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-grotesk",
+});
+
+import "./globals.css";
+
 export default function RootLayout({
   children,
 }: {
@@ -5,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={`${inter.variable} font-sans p-12`}>{children}</body>
     </html>
   );
 }

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Destinations } from "./types";
+import { Destination, Destinations } from "./types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const BASE_URL =
@@ -19,12 +19,17 @@ export const useGetData = () => {
   return useQuery({
     queryKey: ["destinations"],
     queryFn: getData,
+    //To keep the data for 5 min to not refresh data after modifying it
+    staleTime: 1000 * 60 * 5,
   });
 };
+
 export const useDeleteById = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
+    //mutatefn: making Delete request
+
     // Optimistically update the UI
     onMutate: async (id: number) => {
       // Optimistically update the cache
@@ -35,12 +40,22 @@ export const useDeleteById = () => {
   });
 };
 
-export async function deleteDestination(id: number) {
-  const { data } = await axios.delete(`api/${id}`);
+export const useEditById = () => {
+  const queryClient = useQueryClient();
 
-  if (!data) {
-    throw new Error("Failed to delete data");
-  }
+  return useMutation({
+    //mutatefn: making PATCH request
 
-  return data;
-}
+    onMutate: async ({ id, data }: { id: number; data: Destination }) => {
+      // Optimistically update the cache
+      console.log(data);
+      queryClient.setQueryData(["destinations"], (old: any) =>
+        old
+          ? old.map((destination: any) =>
+              destination.id === id ? { ...destination, ...data } : destination
+            )
+          : []
+      );
+    },
+  });
+};

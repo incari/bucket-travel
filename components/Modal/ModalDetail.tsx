@@ -1,23 +1,31 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { getData } from "../../utils/api";
+import { getData, useEditById, useGetData } from "../../utils/api";
 import { Destination } from "../../utils/types";
 import { CheckCircle } from "phosphor-react";
 
 export const ModalDetail = ({ id }: { id: string }) => {
-  const [data, setData] = useState<Destination | undefined>(undefined);
+  const useEdit = useEditById();
+  const { data, isLoading } = useGetData();
 
-  const fetchData = useCallback(async () => {
-    const data = await getData();
-    setData(data?.find((destination) => destination.id === Number(id)));
-  }, []);
-  const { photo_url, title, status, description, itinerary } = data || {};
+  const destination =
+    data?.find((destination) => destination.id === Number(id)) ||
+    ({} as Destination);
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+  const { photo_url, title, status, description, itinerary } = destination;
 
-  //TODO  add a function to toggle the status
-  const handleToggle = () => {};
+  const handleToggle = () => {
+    if (data) {
+      useEdit.mutate({
+        id: Number(id),
+        data: { ...destination, status: status === "done" ? "todo" : "done" },
+      });
+    } else {
+      useEdit.mutate({
+        id: Number(id),
+        data: {} as Destination,
+      });
+    }
+  };
 
   return (
     data && (

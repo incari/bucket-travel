@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Destination } from "../utils/types";
 import Link from "next/link";
-import { deleteDestination, useDeleteById } from "../utils/api";
+import { useDeleteById } from "../utils/api";
 
 export const Card = ({ destination }: { destination: Destination }) => {
   const { id, title, description, photo_url } = destination;

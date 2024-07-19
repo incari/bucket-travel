@@ -3,41 +3,18 @@ import React, { useEffect, useState } from "react";
 import { TabButton } from "./TabButton";
 import { Destinations } from "../../utils/types";
 import { Card } from "../Card";
+import { useFilterDestinations } from "../../utils/hooks";
 
 export const TabContainer = ({ data }: { data: Destinations }) => {
-  const [activeTab, setActiveTab] = useState<"all" | "todo" | "done">("all");
-  const [searchValue, setSearchValue] = useState("");
-  const [results, setResults] = useState(data);
+  const {
+    activeTab,
+    setActiveTab,
+    searchValue,
+    setSearchValue,
+    results,
+    handleSubmit,
+  } = useFilterDestinations(data);
 
-  const filterBySearch = data.filter((destination) => {
-    const titleMatch = searchValue.toLowerCase()
-      ? destination.title.toLowerCase().includes(searchValue)
-      : true;
-    const descriptionMatch = searchValue.toLowerCase()
-      ? destination.description.toLowerCase().includes(searchValue)
-      : true;
-
-    return titleMatch || descriptionMatch;
-  });
-
-  const filterByTab = results.filter((destination) => {
-    // Filter by Status
-    if (activeTab === "all") {
-      // return all the objects
-      return destination;
-    }
-    //Filter by tab
-    return destination.status === activeTab;
-  });
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setResults(filterBySearch);
-  };
-
-  useEffect(() => {
-    setResults(data);
-  }, [data]);
   return (
     <>
       <div className="py-16  max-w-sm m-auto">
@@ -85,7 +62,7 @@ export const TabContainer = ({ data }: { data: Destinations }) => {
           />
         </div>
         <ul>
-          {filterByTab.map((destination) => (
+          {results.map((destination) => (
             <li
               key={destination.title}
               // The key should be destination.id but the endpoint is returning 2 values with id:5

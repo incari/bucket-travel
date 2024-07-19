@@ -1,42 +1,47 @@
-import { useState } from "react";
-
-type Destination = {
-  title: string;
-  description: string;
-  status: "all" | "todo" | "done";
-};
-
-type Destinations = Destination[];
+import { useEffect, useState } from "react";
+import { Destinations } from "./types";
 
 export const useFilterDestinations = (data: Destinations) => {
   const [activeTab, setActiveTab] = useState<"all" | "todo" | "done">("all");
   const [searchValue, setSearchValue] = useState("");
+  const [results, setResults] = useState(data);
 
-  const filteredResults = data.filter((destination) => {
-    const lowerSearchValue = searchValue.toLowerCase();
-    const titleMatch = lowerSearchValue
-      ? destination.title.toLowerCase().includes(lowerSearchValue)
+  //To handle the search value
+  const filterBySearch = data.filter((destination) => {
+    const titleMatch = searchValue.toLowerCase()
+      ? destination.title.toLowerCase().includes(searchValue)
       : true;
-    const descriptionMatch = lowerSearchValue
-      ? destination.description.toLowerCase().includes(lowerSearchValue)
+    const descriptionMatch = searchValue.toLowerCase()
+      ? destination.description.toLowerCase().includes(searchValue)
       : true;
 
-    const matchesSearch = titleMatch || descriptionMatch;
-    const matchesTab = activeTab === "all" || destination.status === activeTab;
+    return titleMatch || descriptionMatch;
+  });
 
-    return matchesSearch && matchesTab;
+  // Filter by Status tab
+  const filterByTab = results.filter((destination) => {
+    if (activeTab === "all") {
+      return destination;
+    }
+    return destination.status === activeTab;
   });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setResults(filterBySearch);
   };
+
+  // Refresh data when delete/edit with the search value
+  useEffect(() => {
+    setResults(filterBySearch);
+  }, [data]);
 
   return {
     activeTab,
     setActiveTab,
     searchValue,
     setSearchValue,
-    results: filteredResults,
+    results: filterByTab,
     handleSubmit,
   };
 };

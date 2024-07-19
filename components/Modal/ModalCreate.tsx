@@ -6,87 +6,79 @@ import { MForm } from "./MForm";
 import { Dropdown } from "./Dropdown";
 import { usePathname } from "next/navigation";
 import { PlusCircle } from "phosphor-react";
-import { getData } from "../../utils/api";
+import { useAddNewDestination, useEditById, useGetData } from "../../utils/api";
 import { Destination, ItineraryItem } from "../../utils/types";
-
-export type FormValues = {
-  title: string;
-  introduction: string;
-  description: string;
-  photo_url: string;
-  itinerary: ItineraryItem[];
-};
+import { SubmitHandler, useForm } from "react-hook-form";
 
 export const ModalCreate = ({ id }: { id?: string }) => {
-  const [data, setData] = useState<Destination | undefined>(undefined);
-  const [itinerary, setItinerary] = useState<ItineraryItem[]>([
-    { day: 0, location: "", description: "" },
-  ]);
+  const useEdit = useEditById();
+  const useAdd = useAddNewDestination();
+  const { data, isLoading } = useGetData();
 
-  const [formValues, setFormValues] = useState<FormValues>({
-    title: data?.title || "",
-    introduction: "",
-    description: data?.description || "",
-    photo_url: data?.photo_url || "",
-    itinerary: data?.itinerary || [{ day: 0, location: "", description: "" }],
-  });
-  // TODO Refactor form-hooks
+  const destination = data?.find(
+    (destination) => destination.id === Number(id)
+  );
 
-  // TODO Refactor with React query
-  const fetchData = useCallback(async () => {
-    const data = await getData();
-
-    const trip = data?.find((destination) => destination.id === Number(id));
-
-    setData(trip);
-    setItinerary(
-      trip?.itinerary || [{ day: 0, location: "", description: "" }]
-    );
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
-
-  const handleItineraryChange = (
-    index: number,
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    const newItinerary = [...(data?.itinerary || [])];
-    newItinerary[index] = { ...newItinerary[index], [name]: value };
-    setFormValues({ ...formValues, itinerary: newItinerary });
-  };
+  console.log(destination);
+  const { control, register, handleSubmit, setValue, getValues } =
+    useForm<Destination>({
+      defaultValues: { ...destination },
+    });
 
   const addItinerary = () => {
-    setFormValues({
-      ...formValues,
-      itinerary: [
-        ...formValues.itinerary,
-        { day: 0, location: "", description: "" },
-      ],
-    });
+    setValue("itinerary", [
+      ...(destination?.itinerary || []),
+      { day: 0, location: "", description: "" },
+    ]);
   };
 
-  const handleChangeDay = (day: number) => {
-    const newItinerary = [...(data?.itinerary || [])];
-    newItinerary[day - 1] = { ...newItinerary[day - 1], day };
-    setFormValues({ ...formValues, itinerary: newItinerary });
+  const onSubmit: SubmitHandler<Destination> = (data) => {
+    console.log(data);
+
+    handleSave(data as Destination);
+  };
+
+  const handleChangeDay = (newDay: number, originalDay: number) => {
+    const currentItinerary = getValues("itinerary") || [];
+
+    // Find the item that needs to be moved
+    const itemToMove = currentItinerary.find(
+      (item) => item.day === originalDay
+    );
+    if (!itemToMove) {
+      console.error(`Item with original day ${originalDay} not found`);
+      return;
+    }
+
+    // Create a new itinerary array without the item to move
+    const filteredItinerary = currentItinerary.filter(
+      (item) => item.day !== originalDay
+    );
+
+    // Insert the item to its new position
+    const newItinerary = [
+      ...filteredItinerary.slice(0, newDay - 1),
+      { ...itemToMove, day: newDay },
+      ...filteredItinerary
+        .slice(newDay - 1)
+        .map((item) => ({ ...item, day: item.day + 1 })),
+    ];
+
+    // Update form state with the new itinerary
+    setValue("itinerary", newItinerary);
+  };
+
+  const handleSave = (data: Destination) => {
+    if (id && data) {
+      useEdit.mutate({ id: Number(id), data });
+    } else {
+      useAdd.mutate(data);
+    }
   };
 
   return (
-    <div>
-      <MForm
-        onChange={handleInputChange}
-        formValues={data}
-      />
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <MForm register={register} />
 
       <div className="flex flex-col gap-2 mt-6">
         <div className="flex justify-between">
@@ -103,7 +95,7 @@ export const ModalCreate = ({ id }: { id?: string }) => {
           </button>
         </div>
 
-        {itinerary.map((day, index) => (
+        {destination?.itinerary?.map((day, index) => (
           <div
             key={index}
             className="bg-gray-100 p-4 rounded-lg 
@@ -111,26 +103,23 @@ export const ModalCreate = ({ id }: { id?: string }) => {
           >
             <div className="flex space-x-2">
               <Dropdown
-                options={itinerary}
-                byDay={day}
-                onChange={handleChangeDay}
+                options={destination.itinerary}
+                register={register}
+                index={index}
+                onChangeDay={handleChangeDay}
               />
 
               <div className="w-full ">
                 <input
                   type="text"
-                  name="location"
-                  value={day.location}
-                  onChange={(e) => handleItineraryChange(index, e)}
                   placeholder="Location"
                   className="border rounded-full h-12 w-full text-gray-700 pl-4 mb-2"
+                  {...register(`itinerary.${index}.location`)}
                 />
                 <textarea
-                  name="description"
-                  value={day.description}
-                  onChange={(e) => handleItineraryChange(index, e)}
                   placeholder="Description"
                   className="border rounded-xl h-24 w-full text-gray-700 pl-4 pt-2"
+                  {...register(`itinerary.${index}.description`)}
                 />
               </div>
             </div>
@@ -139,12 +128,12 @@ export const ModalCreate = ({ id }: { id?: string }) => {
       </div>
       <div className="flex justify-start mt-6">
         <button
-          type="button"
+          type="submit"
           className="border rounded-full h-12  w-[160px] text-white bg-black "
         >
           Save
         </button>
       </div>
-    </div>
+    </form>
   );
 };

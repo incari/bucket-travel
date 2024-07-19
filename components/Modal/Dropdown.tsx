@@ -19,44 +19,54 @@ const ChevronDownIcon = () => (
 
 export const Dropdown = ({
   options,
-  byDay,
-  onChange,
+  register,
+  index,
+  onChangeDay,
 }: {
   options: ItineraryItem[];
-  byDay: ItineraryItem;
-  onChange: (index: number) => void;
+  register: any;
+  index: number;
+  onChangeDay: (
+    newDay: number,
+    originalDay: number,
+    itinerary: ItineraryItem[]
+  ) => void;
 }) => {
+  const currentDay = options[index]?.day || 0;
+
+  const handleDayChange = (newDay: number) => {
+    onChangeDay(newDay, currentDay, options);
+  };
+
   return (
     <Menu
       as="div"
       className="relative inline-block text-left"
     >
       <div>
-        <MenuButton className="flex gap-4 items-center p-4 bg-white text-gray-400 border rounded-full h-12  w-full  pl-4 line-clamp-1 mb-2">
-          {byDay.day}
+        <MenuButton className="flex gap-4 items-center p-4 bg-white text-gray-400 border rounded-full h-12 w-full pl-4 line-clamp-1 mb-2">
+          {currentDay || "Select Day"}
           <ChevronDownIcon aria-hidden="true" />
         </MenuButton>
       </div>
 
-      <MenuItems
-        transition
-        className="absolute right-0 z-10 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-      >
+      <MenuItems className="absolute right-0 z-10 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in">
         <div className="py-1">
-          {options.map(({ day }) => {
-            return (
-              <MenuItem key={day}>
+          {options.map(({ day }) => (
+            <MenuItem key={day}>
+              {({ active }) => (
                 <button
-                  onClick={() => {
-                    onChange(day);
-                  }}
-                  className="block w-full text-right px-4 py-2 text-sm"
+                  type="button"
+                  className={`block w-full text-right px-4 py-2 text-sm ${
+                    active ? "bg-gray-100" : ""
+                  }`}
+                  onClick={() => handleDayChange(day)}
                 >
                   {day}
                 </button>
-              </MenuItem>
-            );
-          })}
+              )}
+            </MenuItem>
+          ))}
         </div>
       </MenuItems>
     </Menu>

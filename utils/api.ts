@@ -24,6 +24,19 @@ export const useGetData = () => {
   });
 };
 
+export const useAddNewDestination = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    //mutatefn: making Add request
+    // Optimistically update the UI
+    onMutate: async (data: Destination) => {
+      // Optimistically update the cache
+      queryClient.setQueryData(["destinations"], (old: any) => [data, ...old]);
+    },
+  });
+};
+
 export const useDeleteById = () => {
   const queryClient = useQueryClient();
 

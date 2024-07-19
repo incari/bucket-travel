@@ -1,35 +1,49 @@
-# Next.js + Jest
+# React + TypeScript Technical Test
 
-This example shows how to configure Jest to work with Next.js.
 
-This includes Next.js' built-in support for Global CSS, CSS Modules and TypeScript. This example also shows how to use Jest with the App Router and React Server Components.
+Thank you for taking the time to review this project. I'm excited to share my work with you and look forward to your feedback.
 
-> **Note:** Since tests can be co-located alongside other files inside the App Router, we have placed those tests in `app/` to demonstrate this behavior (which is different than `pages/`). You can still place all tests in `__tests__` if you prefer.
+## Demo
 
-## Deploy your own
+Visit the deployed application: [Bucket Travel](https://bucket-travel.vercel.app/)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-jest&project-name=with-jest&repository-name=with-jest)
+## Installation
 
-## How to Use
+To set up this project locally, follow these steps:
 
-Quickly get started using [Create Next App](https://github.com/vercel/next.js/tree/canary/packages/create-next-app#readme)!
+1. **Clone the Repository**
 
-In your terminal, run the following command:
+   First, clone the project repository to your local machine using Git:
 
-```bash
-npx create-next-app --example with-jest with-jest-app
-```
+   ```bash
+   git clone https://github.com/incari/bucket-travel
+   cd your-repository-name
 
-```bash
-yarn create next-app --example with-jest with-jest-app
-```
+   ```
 
-```bash
-pnpm create next-app --example with-jest with-jest-app
-```
+2. **Install**
 
-## Running Tests
+   ```bash
+   npm install  or yarn install
 
-```bash
-npm test
-```
+   ```
+
+3. **Run the App**
+
+   ```bash
+   npm run dev  or yarn dev
+   
+   ```
+
+
+## Tech Stack
+
+- Typescript.
+- Tailwind Css.
+- Next.js 14
+- SWR (stale-while-revalidate) by Next.js
+- React-hook-form
+- Tamstack Query
+- Axios
+
+

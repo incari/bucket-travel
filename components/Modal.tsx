@@ -3,8 +3,9 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { ModalCreate } from "./Modal/ModalCreate";
 import { ModalDetail } from "./Modal/ModalDetail";
 import { MHeader } from "./Modal/MHeader";
+import { Suspense } from "react";
 
-export function Modal() {
+function Modal() {
   const searchParams = useSearchParams();
   const modal = searchParams.get("modal");
   const label =
@@ -53,3 +54,10 @@ export function Modal() {
     </>
   );
 }
+
+const ModalHoc = () => {
+  <Suspense>
+    <Modal />
+  </Suspense>;
+};
+export { ModalHoc as Modal };

@@ -6,6 +6,7 @@ import { getData, useGetData } from "../utils/api";
 
 export const Container = () => {
   const { data, isLoading } = useGetData();
+  console.log(data);
 
   return (
     <>

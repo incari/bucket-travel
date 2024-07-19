@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Destination } from "../utils/types";
 import Link from "next/link";
 import { useDeleteById } from "../utils/api";
@@ -27,17 +26,20 @@ export const Card = ({ destination }: { destination: Destination }) => {
           </p>
           <div className="flex justify-between underline underline-offset-2 mt-4">
             <Link
+              data-testid="see-trip-details"
               href={`?modal=detail&id=${id}`}
               className=""
             >
               <div className="hover:text-gray-500 underline hover:decoration-gray-500">
-                {" "}
                 See trip details
               </div>
             </Link>
 
             <div className="flex gap-4">
-              <Link href={`?modal=edit&id=${id}`}>
+              <Link
+                href={`?modal=edit&id=${id}`}
+                data-testid="edit-trip"
+              >
                 <div className="hover:text-gray-500 underline hover:decoration-gray-500">
                   Edit
                 </div>
@@ -45,6 +47,7 @@ export const Card = ({ destination }: { destination: Destination }) => {
 
               <form onSubmit={onSubmit}>
                 <button
+                  data-testid="delete-trip"
                   type={"submit"}
                   className="underline decoration-red-500 text-red-500 hover:text-red-700 hover:decoration-red-700"
                 >

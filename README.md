@@ -17,7 +17,7 @@ To set up this project locally, follow these steps:
 
    ```bash
    git clone https://github.com/incari/bucket-travel
-   cd your-repository-name
+   cd  bucket-travel
 
    ```
 

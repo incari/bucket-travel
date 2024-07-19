@@ -55,9 +55,10 @@ function Modal() {
   );
 }
 
-const ModalHoc = () => {
+const ModalHoc = () => (
   <Suspense>
     <Modal />
-  </Suspense>;
-};
+  </Suspense>
+);
+
 export { ModalHoc as Modal };

@@ -64,7 +64,7 @@ export const TabContainer = ({ data }: { data: Destinations }) => {
         <ul>
           {results.map((destination) => (
             <li
-              key={destination.title}
+              key={destination.title + destination.id}
               // The key should be destination.id but the endpoint is returning 2 values with id:5
               // And causing inconsistency with the rendering objects
             >

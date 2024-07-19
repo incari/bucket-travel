@@ -45,7 +45,7 @@ export const Dropdown = ({
     >
       <div>
         <MenuButton className="flex gap-4 items-center p-4 bg-white text-gray-400 border rounded-full h-12 w-full pl-4 line-clamp-1 mb-2">
-          {currentDay || "Select Day"}
+          {currentDay || "Day"}
           <ChevronDownIcon aria-hidden="true" />
         </MenuButton>
       </div>

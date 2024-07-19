@@ -8,6 +8,11 @@ const inter = Hanken_Grotesk({
 
 import "./globals.css";
 
+export const metadata = {
+  title: "Bucket Travel",
+  description: "Your place to plan your next adventure",
+};
+
 export default function RootLayout({
   children,
 }: {

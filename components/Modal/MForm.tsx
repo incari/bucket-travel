@@ -8,7 +8,8 @@ export const MForm = ({ register }: { register: any }) => {
           name="title"
           placeholder="Italy"
           className="border rounded-full h-12 w-full text-gray-700 pl-4"
-          {...register("title")}
+          {...register("title", { required: true })}
+          required
         />
       </div>
       <div className="text-sm text-gray-700">

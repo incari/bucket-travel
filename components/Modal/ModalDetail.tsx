@@ -32,7 +32,7 @@ export const ModalDetail = ({ id }: { id: string }) => {
       <div className="">
         <img
           src={photo_url}
-          alt="Portugal"
+          alt={title}
           className="w-full object-cover h-[250px] absolute top-0 left-0 "
         />
         <div className="mt-[183px] flex flex-col gap-4">

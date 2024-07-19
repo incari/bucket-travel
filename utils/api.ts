@@ -32,7 +32,15 @@ export const useAddNewDestination = () => {
     // Optimistically update the UI
     onMutate: async (data: Destination) => {
       // Optimistically update the cache
-      queryClient.setQueryData(["destinations"], (old: any) => [data, ...old]);
+      queryClient.setQueryData(["destinations"], (old: Destination[]) => {
+        const newDestination = {
+          ...data,
+          id: Math.max(...old.map((item) => item.id)) + 1,
+          status: "todo",
+        };
+
+        return [newDestination, ...old];
+      });
     },
   });
 };
@@ -61,7 +69,6 @@ export const useEditById = () => {
 
     onMutate: async ({ id, data }: { id: number; data: Destination }) => {
       // Optimistically update the cache
-      console.log(data);
       queryClient.setQueryData(["destinations"], (old: any) =>
         old
           ? old.map((destination: any) =>

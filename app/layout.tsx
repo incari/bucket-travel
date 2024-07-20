@@ -1,12 +1,23 @@
 import { Header } from "../components/Header";
 import { Hanken_Grotesk } from "next/font/google";
+import "./globals.css";
+import { Viewport } from "next";
 
 const inter = Hanken_Grotesk({
   subsets: ["latin"],
   variable: "--font-grotesk",
 });
 
-import "./globals.css";
+// Prevent auto-zoom on inputs for IOS
+//https://nextjs.org/docs/app/api-reference/functions/generate-viewport#generateviewport-function-1
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  // Also supported by less commonly used
+  // interactiveWidget: 'resizes-visual',
+};
 
 export const metadata = {
   title: "Bucket Travel",

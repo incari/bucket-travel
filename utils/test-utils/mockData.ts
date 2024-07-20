@@ -1,4 +1,4 @@
-import { Destinations } from "../../utils/types";
+import { Destinations } from "../types";
 
 export const mockData: Destinations = [
   {

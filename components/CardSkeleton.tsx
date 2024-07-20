@@ -2,7 +2,10 @@ import React from "react";
 
 export const CardSkeleton = () => {
   return (
-    <div className="animate-pulse mt-8 max-w-4xl mx-auto bg-gray-200 rounded-lg shadow-lg overflow-hidden h-[200px] flex">
+    <div
+      data-testid="card-skeleton"
+      className="animate-pulse mt-8 max-w-4xl mx-auto bg-gray-200 rounded-lg shadow-lg overflow-hidden h-[200px] flex"
+    >
       <div className="w-1/2 bg-gray-300 h-full"></div>
       <div className="w-1/2">
         <div className="p-6 text-start">

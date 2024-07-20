@@ -4,8 +4,15 @@ import { TabButton } from "./TabButton";
 import { Destinations } from "../../utils/types";
 import { Card } from "../Card";
 import { useFilterDestinations } from "../../utils/hooks";
+import { CardSkeleton } from "../CardSkeleton";
 
-export const TabContainer = ({ data }: { data: Destinations }) => {
+export const TabContainer = ({
+  data,
+  isLoading,
+}: {
+  data?: Destinations;
+  isLoading: boolean;
+}) => {
   const {
     activeTab,
     setActiveTab,
@@ -13,7 +20,7 @@ export const TabContainer = ({ data }: { data: Destinations }) => {
     setSearchValue,
     results,
     handleSubmit,
-  } = useFilterDestinations(data);
+  } = useFilterDestinations(data || []);
 
   return (
     <>
@@ -62,6 +69,15 @@ export const TabContainer = ({ data }: { data: Destinations }) => {
           />
         </div>
         <ul>
+          {isLoading &&
+            Array(3)
+              .fill(null)
+              .map((_, index) => (
+                <li key={index}>
+                  <CardSkeleton />
+                </li>
+              ))}
+
           {results.map((destination) => (
             <li
               key={destination.title + destination.id}

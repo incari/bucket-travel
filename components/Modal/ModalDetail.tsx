@@ -29,7 +29,7 @@ export const ModalDetail = ({ id }: { id: string }) => {
 
   return (
     data && (
-      <div className="">
+      <div className="text-left">
         <img
           src={photo_url}
           alt={title}

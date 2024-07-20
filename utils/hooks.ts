@@ -15,7 +15,12 @@ export const useFilterDestinations = (data: Destinations) => {
       ? destination.description.toLowerCase().includes(searchValue)
       : true;
 
-    return titleMatch || descriptionMatch;
+    // Introduction does come from BE but optional ?
+    const introductionMatch = searchValue.toLowerCase()
+      ? destination?.introduction?.toLowerCase().includes(searchValue)
+      : true;
+
+    return titleMatch || descriptionMatch || introductionMatch;
   });
 
   // Filter by Status tab

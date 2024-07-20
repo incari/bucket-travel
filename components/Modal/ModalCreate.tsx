@@ -112,6 +112,7 @@ export const ModalCreate = ({ id }: { id?: string }) => {
       </div>
       <div className="flex justify-start mt-6">
         <button
+          data-testid="save-button"
           type="submit"
           className="border rounded-full h-12 w-[160px] text-white bg-black "
         >

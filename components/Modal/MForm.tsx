@@ -2,8 +2,14 @@ export const MForm = ({ register }: { register: any }) => {
   return (
     <>
       <div className="text-sm text-gray-700">
-        <label className="block mb-1">Name</label>
+        <label
+          htmlFor="title"
+          className="block mb-1"
+        >
+          Name
+        </label>
         <input
+          id="title"
           type="text"
           name="title"
           placeholder="Italy"
@@ -13,8 +19,14 @@ export const MForm = ({ register }: { register: any }) => {
         />
       </div>
       <div className="text-sm text-gray-700">
-        <label className="block mb-1">Introduction (max. 240 characters)</label>
+        <label
+          htmlFor="introduction"
+          className="block mb-1"
+        >
+          Introduction (max. 240 characters)
+        </label>
         <textarea
+          id="introduction"
           name="introduction"
           className="border rounded-xl h-24 w-full text-gray-700 pl-4 pt-2"
           maxLength={240}
